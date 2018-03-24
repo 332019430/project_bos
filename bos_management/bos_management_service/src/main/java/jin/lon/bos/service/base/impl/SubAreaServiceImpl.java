@@ -86,4 +86,11 @@ public class SubAreaServiceImpl implements SubAreaService {
         
     }
 
+    @Override
+    public void save(List<SubArea> list) {
+          
+        subAreaRepository.save(list);
+        
+    }
+
 }

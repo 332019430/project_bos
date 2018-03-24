@@ -30,6 +30,8 @@ public interface SubAreaService {
 
     List<SubArea> findByFixedArea(Long id);
 
+    void save(List<SubArea> list);
+
     
 
 }

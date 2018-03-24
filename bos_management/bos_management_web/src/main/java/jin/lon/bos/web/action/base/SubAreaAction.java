@@ -1,8 +1,15 @@
 package jin.lon.bos.web.action.base;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -14,8 +21,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
+import jin.lon.bos.bean.base.Area;
 import jin.lon.bos.bean.base.FixedArea;
 import jin.lon.bos.bean.base.SubArea;
+import jin.lon.bos.dao.base.AreaDao;
 import jin.lon.bos.service.base.SubAreaService;
 import jin.lon.bos.web.action.CommonAction;
 import net.sf.json.JsonConfig;
@@ -38,7 +47,49 @@ public class SubAreaAction extends CommonAction<SubArea> {
 
     @Autowired
     private SubAreaService subAreaService;
-
+    @Autowired
+    private AreaDao areaDao;
+    
+    private File file;
+    public void setFile(File file) {
+        this.file = file;
+    }
+    @Action(value="subAreaAction_importXLS", results = {@Result(name = "success",
+            location = "/pages/base/sub_area.html", type = "redirect")})
+    public String subAreaAction_importXLS() throws Exception{
+        XSSFWorkbook workbook = new XSSFWorkbook(new FileInputStream(file));
+        XSSFSheet sheetAt = workbook.getSheetAt(0);
+        List<SubArea> list=new ArrayList<>();
+        for (Row row : sheetAt) {
+            if (row.getRowNum()==0) {
+                continue;
+            }
+            String province = row.getCell(1).getStringCellValue();
+            String city = row.getCell(2).getStringCellValue();
+            String district = row.getCell(3).getStringCellValue();
+            district=district.substring(0, district.length()-1);
+            Area area = areaDao.findByProvinceAndCityAndDistrict(province, city, district);
+            
+            
+            String keyWords = row.getCell(4).getStringCellValue();
+            String startNum = row.getCell(5).getStringCellValue();
+            String endNum = row.getCell(6).getStringCellValue();
+            String single = row.getCell(7).getStringCellValue();
+            String assistKeyWords = row.getCell(8).getStringCellValue();
+            SubArea subArea = new SubArea();
+            subArea.setArea(area);
+            subArea.setKeyWords(keyWords);
+            subArea.setStartNum(startNum);
+            subArea.setEndNum(endNum);
+            subArea.setSingle(single.charAt(0));
+            subArea.setAssistKeyWords(assistKeyWords);
+            
+            list.add(subArea);
+        }
+        subAreaService.save(list);
+        return SUCCESS;
+    }
+    
     @Action(value = "subareaAction_save", results = {@Result(name = "success",
             location = "/pages/base/sub_area.html", type = "redirect")})
     public String save() {
