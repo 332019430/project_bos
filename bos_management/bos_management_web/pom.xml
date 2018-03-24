@@ -14,5 +14,10 @@
   		<artifactId>bos_management_service</artifactId>
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
+  	<dependency>
+  		<groupId>jin.lon</groupId>
+  		<artifactId>bos_management_dao</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
   </dependencies>
 </project>
