@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Basic Layout - jQuery EasyUI Demo</title>
+<link rel="stylesheet" type="text/css"
+	href="../js/easyui/themes/default/easyui.css">
+<link rel="stylesheet" type="text/css"
+	href="../js/easyui/themes/icon.css">
+
+<script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+<script type="text/javascript" src="../js/easyui/jquery.easyui.min.js"></script>
+
+<link rel="stylesheet" href="../js/ztree/zTreeStyle.css" type="text/css">
+
+<script type="text/javascript" src="../js/ztree/jquery.ztree.all-3.5.js"></script>
+<script type="text/javascript">
+	$(function() {
+		/* $('#btn').bind('click', function() {
+
+			var result = $('#tt').tabs("exists", "新选项卡面板");
+			if (result) {
+				$('#tt').tabs("select", "新选项卡面板");
+			} else {
+				$('#tt').tabs('add', {
+					title : '新选项卡面板',
+					selected : true
+				});
+			}
+
+		}); */
+	});
+</script>
+
+<SCRIPT type="text/javascript">
+	function zTreeOnClick(event, treeId, treeNode) {
+		var pId = treeNode.pId
+		if (pId != null) {
+			var result = $('#tt').tabs("exists", treeNode.name);
+			if (result) {
+				$('#tt').tabs("select", treeNode.name);
+			} else {
+				$('#tt')
+						.tabs(
+								'add',
+								{
+									title : treeNode.name,
+									selected : true,
+									closable : true,
+									content : '<iframe style="width: 100%;height: 100%"  frameborder="no"  src="../'
+											+ treeNode.page + '"></iframe>',
+									fit : true,
+									tools : [ {
+										iconCls : 'icon-reload', // 刷新按钮
+										handler : function() {
+											var tab = $('#tabs').tabs('getTab',
+													treeNode.name);
+											$(
+													"iframe[src='"
+															+ treeNode.page
+															+ "']").get(0).contentWindow.location
+													.reload(true);
+										}
+									} ]
+								});
+			}
+		}
+
+	};
+
+	var setting = {
+		data : {
+			simpleData : {
+				enable : true
+			}
+		},
+		callback : {
+			onClick : zTreeOnClick
+		}
+	};
+
+	$(document).ready(function() {
+
+		$.get("../data/menu.json", function(date) {
+			$.fn.zTree.init($("#treeDemo"), setting, date);
+		}, "json");
+	});
+</SCRIPT>
+
+</head>
+<body class="easyui-layout">
+
+
+
+	<div data-options="region:'north'" style="height: 50px"></div>
+	<div data-options="region:'west',split:true" title="West"
+		style="width: 200px;">
+
+
+		<div class="easyui-accordion" data-options="fit:true">
+			<div title="面板1" data-options="iconCls:'icon-ok'"
+				style="overflow: auto; padding: 10px;">
+				<a id="btn" href="#" class="easyui-linkbutton"
+					data-options="iconCls:'icon-search'">easyui</a>
+				<ul id="treeDemo" class="ztree"></ul>
+				<a href="javascript:void(0)" id="mb" class="easyui-menubutton"
+					data-options="menu:'#mm',iconCls:'icon-edit'">Edit</a>
+				<div id="mm" style="width: 150px;">
+					<div data-options="iconCls:'icon-undo'">Undo</div>
+					<div data-options="iconCls:'icon-redo'">Redo</div>
+					<div class="menu-sep"></div>
+					<div>Cut</div>
+					<div>Copy</div>
+					<div>Paste</div>
+					<div class="menu-sep"></div>
+					<div data-options="iconCls:'icon-remove'">Delete</div>
+					<div>Select All</div>
+				</div>
+			</div>
+			<div title="面板2" data-options="iconCls:'icon-help'"
+				style="padding: 10px;">面板2</div>
+			<div title="面板3" data-options="iconCls:'icon-search'"
+				style="padding: 10px;">面板3</div>
+		</div>
+
+	</div>
+	<div
+		data-options="region:'center',title:'Main Title',iconCls:'icon-ok'">
+
+		<div id="tt" class="easyui-tabs" style="fit: true"></div>
+
+	</div>
+
+
+</body>
+</html>

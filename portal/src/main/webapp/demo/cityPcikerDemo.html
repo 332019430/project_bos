@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<script src="../plugins/jquery.min.js" type="text/javascript"></script>
+<!-- jQuery is required -->
+<script src="../plugins/city-picker.data.js"></script>
+<script src="../plugins/city-picker.js"></script>
+<link rel="stylesheet" type="text/css" href="../plugins/city-picker.css" />
+
+<head>
+<meta charset="UTF-8">
+<title></title>
+</head>
+<script type="text/javascript">
+	// 入口函数，在页面加载完毕后加载，不然无法通过#xxx获取对应的元素
+	$(function() {
+		$("#city-picker1").citypicker();
+		// 获取按钮框，并绑定点击事件，点击时触发
+		$("#reset").click(function() {
+			// 获取输入框，并在点击按钮后清空输入框中内容
+			$("#city-picker1").citypicker("reset");
+		});
+	});
+</script>
+<body>
+
+	<div style="position: relative;">
+		<!-- container -->
+		<input id="city-picker1" readonly type="text" size="70">
+		<input id="reset" type="button" value="重置" />
+	</div>
+
+	<br>
+	<br>
+	<br>
+	<div style="position: relative;">
+		<!-- container -->
+		<input id="city-picker1" readonly type="text">
+		<input id="set" type="button" value="赋值" />
+	</div>
+
+	<script type="text/javascript">
+		$(function() {
+			$("#city-picker1").citypicker();
+			$("#set").click(function() {
+				$("#city-picker1").citypicker("reset");
+				$("#city-picker1").citypicker("destroy");
+				$("#city-picker1").citypicker({
+					province : '江苏省',
+					city : '常州市',
+					district : '溧阳市'
+				});
+			});
+		});
+	</script>
+</body>
+
+</html>
