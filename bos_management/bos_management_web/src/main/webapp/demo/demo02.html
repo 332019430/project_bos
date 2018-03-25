@@ -17,36 +17,87 @@
 <script type="text/javascript">
 	$(function() {
 		$('#dg').datagrid({
-			url : 'dg.json',
+			url : "",
 			striped : true,
 			rownumbers : true,
 			pagination : true,
-			fit :true,
-			pageList : [1,2,3],
+			fit : true,
+			pageList : [ 1, 2, 3 ],
+			//保存后回调函数
+			onAfterEdit:function(index,row,changes){
+				console.log(index,row,changes)
+			},
 			columns : [ [ {
-				field : 'code',
+				field : '11',
 				title : '代码',
 				width : 100,
 				checkbox : true
 			}, {
 				field : 'name',
-				title : '名称',
-				width : 100
+				title : '代码',
+				width : 100,
+				editor : {
+					type : "text"
+				}
 			}, {
-				field : 'price',
+				field : 'age',
+				title : '名称',
+				width : 100,
+				editor : {
+					type : "text"
+				}
+			}, {
+				field : 'note',
 				title : '价格',
 				width : 100,
-				align : 'right'
+				align : 'right',
+				editor : {
+					type : "text"
+				}
 			} ] ],
 			toolbar : [ {
 				iconCls : 'icon-edit',
+				text : "增加一行",
 				handler : function() {
-					alert('编辑按钮')
+					$('#dg').datagrid('insertRow', {
+						index : 0, // 索引从0开始
+						row : {
+							name : '新名称',
+							age : 30,
+							note : '新消息'
+						}
+					});
+					$('#dg').datagrid('beginEdit', 0)
 				}
 			}, '-', {
 				iconCls : 'icon-help',
+				text : "修改",
 				handler : function() {
-					alert('帮助按钮')
+					var rows = $('#dg').datagrid("getSelections");
+					if (rows.length == 1) {
+						var index = $('#dg').datagrid("getRowIndex", rows[0]);
+						$('#dg').datagrid('beginEdit', index)
+					}
+
+				}
+			} , '-', {
+				iconCls : 'icon-help',
+				text : "删除",
+				handler : function() {
+					$('#dg').datagrid('deleteRow', 0)
+				}
+			}, '-', {
+				iconCls : 'icon-help',
+				text : "完成编辑",
+				handler : function() {
+					var rows = $('#dg').datagrid("getSelections");
+					if (rows.length == 1) {
+						var index = $('#dg').datagrid("getRowIndex", rows[0]);
+						$('#dg').datagrid('endEdit', index)
+					}else {
+						$('#dg').datagrid('endEdit', 0)
+					}
+					
 				}
 			} ]
 

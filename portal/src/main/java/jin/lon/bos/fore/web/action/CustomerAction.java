@@ -2,6 +2,10 @@ package jin.lon.bos.fore.web.action;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Session;
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.ws.rs.core.Cookie;
@@ -18,15 +22,16 @@ import org.apache.struts2.convention.annotation.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Controller;
 
-
+import com.aliyuncs.exceptions.ClientException;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.ModelDriven;
 
 import jin.lon.bos.bore.bean.Customer;
-
-
+import jin.lon.utils.MSNUtils;
 import jin.lon.utils.Md5Util;
 import jin.lon.utils.SendMailUtils;
 
@@ -47,14 +52,32 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
     public Customer getModel() {
         return model;
     }
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @Action("customer_sendMsn")
     public String sendMsn() {
-        String number = RandomStringUtils.randomNumeric(6);
+        final String number = RandomStringUtils.randomNumeric(6);
         System.out.println(number);
         ServletActionContext.getRequest().getSession().setAttribute("number", number);
 
-        // MSNUtils.sendSms(model.getTelephone(), number);
+        jmsTemplate.send("msn", new MessageCreator() {
+            
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                MapMessage mapMessage = session.createMapMessage();
+                mapMessage.setString("tel", model.getTelephone());
+                mapMessage.setString("number", number);
+                return mapMessage;
+            }
+        });
+        /*try {
+            MSNUtils.sendSms(model.getTelephone(), number);
+        } catch (ClientException e) {
+              
+            // TODO Auto-generated catch block  
+            e.printStackTrace();  
+        }*/
 
         return NONE;
     }
