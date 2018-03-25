@@ -15,6 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.LazyCollection;
+
 import jin.lon.bos.bean.base.Area;
 import jin.lon.bos.bean.base.Courier;
 
