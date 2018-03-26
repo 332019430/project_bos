@@ -75,4 +75,31 @@
 			<bean class="org.apache.cxf.interceptor.LoggingOutInterceptor"></bean>
 		</jaxrs:outInterceptors>
 	</jaxrs:server>
+
+	<bean id="shiroFilterFactoryBean" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager"></property>
+		
+		<!-- 登录界面 -->
+		<property name="loginUrl" value="/login.html"></property>
+		<!-- 登录成功界面 -->
+		<property name="successUrl" value="/index.html"></property>
+		<property name="unauthorizedUrl" value="/unauthorizedUrl.html"></property>
+		
+		<!-- 拦截规则 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/css/*=anon
+				/data/*=anon
+				/images/*=anon
+				/js/**=anon
+				/validatecode.jsp* = anon
+				/userAction_login.action=anon
+				/courier_pageQuery.action=perms["courier_pageQuery"]
+				/**=authc
+			</value>
+		</property>
+	</bean>
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="userRealm"></property>
+	</bean>
 </beans>

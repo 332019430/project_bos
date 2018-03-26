@@ -48,6 +48,8 @@
 		</property>
 	</bean>
 	
+	
+	
 	<amq:connectionFactory userName="admin" password="admin"
 		id="amqConnectionFactory" brokerURL="tcp://localhost:61616"></amq:connectionFactory>
 	<bean id="connectionFactory"
