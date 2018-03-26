@@ -2,19 +2,16 @@ package jin.lon.bos.web.action.base;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.struts2.ServletActionContext;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.struts2.convention.annotation.Action;
 import org.apache.struts2.convention.annotation.Namespace;
 import org.apache.struts2.convention.annotation.ParentPackage;
@@ -27,14 +24,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Controller;
 
-import com.opensymphony.xwork2.ActionSupport;
-import com.opensymphony.xwork2.ModelDriven;
-
 import jin.lon.bos.bean.base.Courier;
 import jin.lon.bos.bean.base.Standard;
 import jin.lon.bos.service.base.CourierService;
 import jin.lon.bos.web.action.CommonAction;
-import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
 /**
@@ -59,17 +52,18 @@ public class CourierAction extends CommonAction<Courier> {
     public CourierAction() {
 
         super(Courier.class);
-        // TODO Auto-generated constructor stub
+        
 
     }
-
+    
     @Autowired
-    private CourierService service;
+    private CourierService courierService;
+    
 
     @Action(value = "courier_save", results = {
             @Result(name = "success", location = "pages/base/courier.html", type = "redirect")})
     public String save() {
-        service.save(getModel());
+        courierService.save(getModel());
         return SUCCESS;
     }
 
@@ -130,8 +124,8 @@ public class CourierAction extends CommonAction<Courier> {
 
         Pageable pageable = new PageRequest(page - 1, rows);
         // Page<Courier> page = service.findAll(pageable);
-
-        Page<Courier> page = service.findAll(specification, pageable);
+        System.out.println(courierService);
+        Page<Courier> page = courierService.findAll(specification, pageable);
 
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"fixedAreas", "takeTime"});
@@ -144,19 +138,20 @@ public class CourierAction extends CommonAction<Courier> {
     public void setIds(String ids) {
         this.ids = ids;
     }
-
+    
+    
     @Action(value = "courier_delete", results = {
             @Result(name = "success", location = "pages/base/courier.html", type = "redirect")})
     public String delete() {
 
-        service.delete(ids);
+        courierService.delete(ids);
         return SUCCESS;
     }
 
     @Action(value = "courierAction_listajax")
     public String courierAction_listajax() throws IOException {
 
-        List<Courier> list = service.findByDeltagIsNotNull();
+        List<Courier> list = courierService.findByDeltagIsNotNull();
         System.out.println("list:" + list);
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"fixedAreas"});

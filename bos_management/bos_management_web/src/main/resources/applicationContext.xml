@@ -60,8 +60,24 @@
 
 	<context:component-scan base-package="jin.lon.bos.service,jin.lon.bos.web" />
 
+	<!-- false是Proxy代理
+		true是cglib代理
+	-->
+	<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
+		
+	 	
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+		<property name="proxyTargetClass" value="true"></property>
+	</bean>
+	
+	
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"></property>
+	</bean>
 
-	<tx:annotation-driven transaction-manager="transactionManager" />
+
 
 	<jpa:repositories base-package="jin.lon.bos.dao" />
 	<jaxrs:server address="/orderService">
@@ -76,15 +92,15 @@
 		</jaxrs:outInterceptors>
 	</jaxrs:server>
 
-	<bean id="shiroFilterFactoryBean" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager"></property>
-		
+
 		<!-- 登录界面 -->
 		<property name="loginUrl" value="/login.html"></property>
 		<!-- 登录成功界面 -->
 		<property name="successUrl" value="/index.html"></property>
 		<property name="unauthorizedUrl" value="/unauthorizedUrl.html"></property>
-		
+
 		<!-- 拦截规则 -->
 		<property name="filterChainDefinitions">
 			<value>

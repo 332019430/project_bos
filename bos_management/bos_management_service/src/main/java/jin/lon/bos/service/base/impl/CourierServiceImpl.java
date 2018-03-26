@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.security.LoginSecurityContext;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,17 +30,16 @@ public class CourierServiceImpl implements CourierService {
 
     @Override
     public void save(Courier model) {
-
         dao.save(model);
-
     }
 
     @Override
     public Page<Courier> findAll(Pageable pageable) {
-
         return dao.findAll(pageable);
     }
-
+    
+    
+    @RequiresPermissions("deleteCourier")
     @Override
     public void delete(String id) {
         if (StringUtils.isNotEmpty(id)) {
@@ -59,7 +59,6 @@ public class CourierServiceImpl implements CourierService {
     @Override
     public List<Courier> findByDeltagIsNotNull() {
           
-        // TODO Auto-generated method stub  
         return dao.findByDeltagIsNull();
     }
     

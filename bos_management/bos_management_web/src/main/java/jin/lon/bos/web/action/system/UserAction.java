@@ -53,15 +53,12 @@ public class UserAction extends CommonAction<User> {
                 && checkCode.equals(checkcode)) {
             // 从安全工具类获取“用户”
             Subject subject = SecurityUtils.getSubject();
-            AuthenticationToken token =
-                    new UsernamePasswordToken(getModel().getUsername(), getModel().getPassword());
             // “用户”登录 -- 需要接收一个认证令牌
             
+            AuthenticationToken token=new UsernamePasswordToken(model.getUsername(), model.getPassword());
             
             try {
                 subject.login(token);
-                User user = (User) subject.getPrincipal();
-                ServletActionContext.getRequest().getSession().setAttribute("user", user);
                 return SUCCESS;
             } catch (UnknownAccountException e) {
                 System.out.println("用户名写错了");
