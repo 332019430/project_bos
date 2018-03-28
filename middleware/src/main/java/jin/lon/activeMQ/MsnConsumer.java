@@ -16,6 +16,7 @@ import jin.lon.utils.MSNUtils;
  * Author: 郑云龙
  */
 @Component
+//实现消费者借口，生成对心消费者
 public class MsnConsumer implements MessageListener {
 
     @Override

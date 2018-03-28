@@ -57,17 +57,22 @@ public class CustomerAction extends ActionSupport implements ModelDriven<Custome
 
     @Action("customer_sendMsn")
     public String sendMsn() {
+        //生成验证码
         final String number = RandomStringUtils.randomNumeric(6);
-        System.out.println(number);
+        //把验证码存进session中
         ServletActionContext.getRequest().getSession().setAttribute("number", number);
-
+        
+        //队列模板发布消息--生产者
         jmsTemplate.send("msn", new MessageCreator() {
             
             @Override
             public Message createMessage(Session session) throws JMSException {
+                //从回话中创建Map消息
                 MapMessage mapMessage = session.createMapMessage();
+                //给map设置消息
                 mapMessage.setString("tel", model.getTelephone());
                 mapMessage.setString("number", number);
+                //此时已经把消息发布到队列中了
                 return mapMessage;
             }
         });

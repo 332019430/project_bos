@@ -21,7 +21,7 @@ import jin.lon.bos.dao.system.UserRepository;
  * Date: 2018年3月26日 下午4:57:48 <br/>
  * Author: 郑云龙
  */
-@Component
+@Component                      //实现授权借口--目的是连接到权限管理的库，框架会认证当事人和授权给当事人
 public class UserRealm extends AuthorizingRealm {
     @Autowired
     private UserRepository userRepository;
@@ -31,6 +31,8 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         info.addStringPermission("courier_pageQuery");
+        info.addStringPermission("deleteCourier");
+        info.addRole("1");
         return info;
     }
 

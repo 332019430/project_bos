@@ -65,15 +65,16 @@
 	-->
 	<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
 		
-	 	
+	 <!-- 开启cglib -->
 	<bean
 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
 		<property name="proxyTargetClass" value="true"></property>
 	</bean>
 	
-	
+	<!--切面-->
 	<bean
 		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<!-- 注入安全管理器 -->
 		<property name="securityManager" ref="securityManager"></property>
 	</bean>
 
@@ -104,14 +105,14 @@
 		<!-- 拦截规则 -->
 		<property name="filterChainDefinitions">
 			<value>
-				/css/*=anon
+				<!-- /css/*=anon
 				/data/*=anon
 				/images/*=anon
 				/js/**=anon
 				/validatecode.jsp* = anon
 				/userAction_login.action=anon
 				/courier_pageQuery.action=perms["courier_pageQuery"]
-				/**=authc
+				/**=authc -->
 			</value>
 		</property>
 	</bean>

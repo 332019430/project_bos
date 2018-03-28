@@ -3,7 +3,6 @@ package jin.lon.bos.service.base.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.cxf.security.LoginSecurityContext;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

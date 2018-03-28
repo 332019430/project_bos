@@ -54,9 +54,10 @@ public class UserAction extends CommonAction<User> {
             // 从安全工具类获取“用户”
             Subject subject = SecurityUtils.getSubject();
             // “用户”登录 -- 需要接收一个认证令牌
-            
-            AuthenticationToken token=new UsernamePasswordToken(model.getUsername(), model.getPassword());
-            
+
+            AuthenticationToken token =
+                    new UsernamePasswordToken(model.getUsername(), model.getPassword());
+
             try {
                 subject.login(token);
                 return SUCCESS;
@@ -73,5 +74,15 @@ public class UserAction extends CommonAction<User> {
         }
 
         return LOGIN;
+    }
+
+    @Action(value = "userAction_logout",
+            results = {@Result(name = "success", location = "/index.html", type = "redirect")})
+    public String logout() {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
+        ServletActionContext.getRequest().getSession().removeAttribute("validateCode");
+
+        return SUCCESS;
     }
 }
