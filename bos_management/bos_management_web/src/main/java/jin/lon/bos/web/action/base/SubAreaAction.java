@@ -87,6 +87,7 @@ public class SubAreaAction extends CommonAction<SubArea> {
             list.add(subArea);
         }
         subAreaService.save(list);
+        workbook.close();
         return SUCCESS;
     }
     

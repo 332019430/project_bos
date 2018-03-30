@@ -31,7 +31,10 @@
 	function doView() {
 		alert("修改...");
 	}
-
+	
+	function doExportExcel() {
+		window.location.href="../../areaAction_exportExcel.action";
+	}
 	function doDelete() {
 		
 		var rows = $("#grid").datagrid("getSelections")
@@ -60,6 +63,11 @@
 		id : 'button-import',
 		text : '导入',
 		iconCls : 'icon-redo'
+	}, {
+		id : 'button-exportExcel',
+		text : '导出',
+		iconCls : 'icon-redo',
+		handler : doExportExcel
 	} ];
 	// 定义列
 	var columns = [ [ {

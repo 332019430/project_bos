@@ -38,7 +38,7 @@ public class CourierServiceImpl implements CourierService {
     }
     
     
-    @RequiresPermissions("deleteCourier")
+    @RequiresPermissions("courier:list")
     @Override
     public void delete(String id) {
         if (StringUtils.isNotEmpty(id)) {

@@ -58,7 +58,7 @@ public class RoleAction extends CommonAction<Role> {
     
     
     
-    /*@Action(value = "roleAction_findAll")
+    @Action(value = "roleAction_findAll")
     public String roleAction_findAll() throws IOException {
         
         Page<Role> page = roleService.findAll(null);
@@ -67,7 +67,7 @@ public class RoleAction extends CommonAction<Role> {
         jsonConfig.setExcludes(new String[] {"menus","permissions","users"});
         list2json(list, jsonConfig);
         return NONE;
-    }*/
+    }
     
     private String menuIds;
     public void setMenuIds(String menuIds) {

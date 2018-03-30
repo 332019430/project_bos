@@ -63,15 +63,16 @@
 	<!-- false是Proxy代理
 		true是cglib代理
 	-->
-	<tx:annotation-driven proxy-target-class="true" transaction-manager="transactionManager" />
-		
-	 <!-- 开启cglib -->
+	<tx:annotation-driven proxy-target-class="true"
+		transaction-manager="transactionManager" />
+
+	<!-- 开启cglib -->
 	<bean
 		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
 		<property name="proxyTargetClass" value="true"></property>
 	</bean>
-	
-	<!--切面-->
+
+	<!--切面 -->
 	<bean
 		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 		<!-- 注入安全管理器 -->
@@ -93,6 +94,8 @@
 		</jaxrs:outInterceptors>
 	</jaxrs:server>
 
+
+
 	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
 		<property name="securityManager" ref="securityManager"></property>
 
@@ -105,18 +108,51 @@
 		<!-- 拦截规则 -->
 		<property name="filterChainDefinitions">
 			<value>
-				<!-- /css/*=anon
+				/css/*=anon
 				/data/*=anon
 				/images/*=anon
 				/js/**=anon
 				/validatecode.jsp* = anon
 				/userAction_login.action=anon
-				/courier_pageQuery.action=perms["courier_pageQuery"]
-				/**=authc -->
+				/courier_pageQuery.action=perms["courier:list"]
+				/**=authc
 			</value>
 		</property>
 	</bean>
 	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="userRealm"></property>
+		<property name="cacheManager" ref="cacheManager"></property>
+	</bean>
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"></property>
+	</bean>
+
+
+
+
+	<!-- 手机 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="emailTrigger" />
+			</list>
+		</property>
+	</bean>
+	<!-- 闹钟 -->
+	<bean id="emailTrigger"
+		class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<!-- 闹钟规则 -->
+		<property name="cronExpression">
+			<value>0/5 * * * * ?</value>
+		</property>
+		<property name="jobDetail" ref="jobDetail"></property>
+	</bean>
+
+	<bean id="jobDetail"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- targetObject:任务在哪里 -->
+		<property name="targetObject" ref="workbillJob"></property>
+		<!-- targetMethod:哪个任务 -->
+		<property name="targetMethod" value="sendMail"></property>
 	</bean>
 </beans>

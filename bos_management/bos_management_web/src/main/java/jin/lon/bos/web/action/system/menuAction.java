@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 
 import jin.lon.bos.bean.system.Menu;
+import jin.lon.bos.bean.system.User;
 import jin.lon.bos.service.system.MenuService;
 import jin.lon.bos.web.action.CommonAction;
 import net.sf.json.JSONObject;
@@ -74,13 +75,23 @@ public class menuAction extends CommonAction<Menu> {
 
     @Action(value = "menuAction_pageQuery")
     public String menuAction_pageQuery() throws IOException {
-        Pageable pageable = new PageRequest(Integer.parseInt(model.getPage())-1, rows);
+        Pageable pageable = new PageRequest(Integer.parseInt(model.getPage()) - 1, rows);
         Page<Menu> page = menuService.findAll(pageable);
         JsonConfig jsonConfig = new JsonConfig();
         jsonConfig.setExcludes(new String[] {"roles", "childrenMenus", "parentMenu"});
         page2json(page, jsonConfig);
         return NONE;
     }
-    
-    
+
+    @Action(value = "menuAction_findbyUser")
+    public String menuAction_findbyUser() throws IOException {
+        Subject subject = SecurityUtils.getSubject();
+        User user = (User) subject.getPrincipal();
+        List<Menu> list = menuService.findbyUid(user.getId());
+      
+        JsonConfig jsonConfig =new JsonConfig();
+        jsonConfig.setExcludes(new String[]{"roles", "childrenMenus", "parentMenu","children"});
+        list2json(list, jsonConfig );
+        return NONE;
+    }
 }

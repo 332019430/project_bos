@@ -23,6 +23,8 @@ public interface MenuService {
     void save(Menu model);
 
     Page<Menu> findAll(Pageable pageable);
+
+    List<Menu> findbyUid(Long id);
     
 }
   

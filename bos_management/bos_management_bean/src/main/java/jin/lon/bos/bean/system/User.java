@@ -19,7 +19,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "T_USER")
-public class User implements Serializable{
+public class User implements Serializable {
 
     @Id
     @GeneratedValue
@@ -44,10 +44,8 @@ public class User implements Serializable{
 
     @ManyToMany
     @JoinTable(name = "T_USER_ROLE",
-            joinColumns = {@JoinColumn(name = "C_USER_ID",
-                    referencedColumnName = "C_ID")},
-            inverseJoinColumns = {@JoinColumn(name = "C_ROLE_ID",
-                    referencedColumnName = "C_ID")})
+            joinColumns = {@JoinColumn(name = "C_USER_ID", referencedColumnName = "C_ID")},
+            inverseJoinColumns = {@JoinColumn(name = "C_ROLE_ID", referencedColumnName = "C_ID")})
     private Set<Role> roles = new HashSet<Role>(0);
 
     public Long getId() {

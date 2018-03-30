@@ -44,6 +44,12 @@ public class MenuServiceImpl implements MenuService {
           
         return menuRepository.findAll(pageable);
     }
+
+    @Override
+    public List<Menu> findbyUid(Long id) {
+          
+        return menuRepository.findbyUid(id);
+    }
     
     
 }

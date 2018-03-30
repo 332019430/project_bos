@@ -42,16 +42,25 @@ public class Menu {
     @ManyToOne
     @JoinColumn(name = "C_PID")
     private Menu parentMenu;
-    
+
     public String getText() {
         return name;
     }
+
     public Set<Menu> getChildren() {
         return childrenMenus;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getpId() {
+        if (parentMenu == null) {
+            return 0L;
+        }
+
+        return parentMenu.getId();
     }
 
     public void setId(Long id) {
